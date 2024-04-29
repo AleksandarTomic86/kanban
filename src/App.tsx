@@ -1,10 +1,7 @@
-import {CustomKanban} from "./components/Kanban.tsx";
+import CustomKanban from "./components/Kanban.tsx";
 
 function App() {
-
-  return (
-    <CustomKanban />
-  )
+  return <CustomKanban />;
 }
 
-export default App
+export default App;
