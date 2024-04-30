@@ -5,7 +5,7 @@ interface Props {
   column: string;
 }
 const DropMark = ({ beforeId, column }: Props) => {
-  return <StyledDropMark data-before={beforeId || "-1"} data-column={column} />;
+  return <StyledDropMark data-before={beforeId || "-1"} data-column={column} data-testid={"drop-mark"} />;
 };
 
 export default DropMark;

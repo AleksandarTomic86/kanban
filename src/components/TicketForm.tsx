@@ -45,15 +45,18 @@ const TicketForm = ({ ticket }: Props) => {
     <>
       <DropMark beforeId={ticket.id} column={ticket.column} />
       <ColoredTicket $column={ticket.column}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} data-testid={"ticket-form"}>
           <Textarea
             ref={textareaRef}
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Task description here..."
+            data-testid={"textarea"}
           />
           <ButtonWrapper>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button type="button" onClick={handleClose}>
+              Cancel
+            </Button>
             <Button type="submit">
               <span>Save</span>
             </Button>

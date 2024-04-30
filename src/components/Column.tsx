@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
-import { selectFilteredTickets, setActive, setTickets } from "@/redux/ticketsSlice.ts";
+import { selectFilteredTickets, setActive, setDragged, setTickets } from "@/redux/ticketsSlice.ts";
 import { ColumnType, IMark, ITicket } from "@/types";
 import TicketForm from "@/components/TicketForm.tsx";
 import DropMark from "@/components/DropMark.tsx";
@@ -14,7 +14,7 @@ import {
   Wrapper,
 } from "@/components/styled/Column.tsx";
 
-interface Props {
+export interface Props {
   title: string;
   column: ColumnType;
 }
@@ -29,10 +29,11 @@ const Column = ({ title, column }: Props) => {
       state.tickets.active!.column === column &&
       state.tickets.value.find((t) => t.id === state.tickets.active!.id) === undefined
   );
+  const ticketId = useAppSelector((state) => state.tickets.dragged);
   const dispatch = useAppDispatch();
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, ticket: ITicket) => {
-    e.dataTransfer.setData("ticketId", ticket.id);
+  const handleDragStart = (_: React.DragEvent<HTMLDivElement>, ticket: ITicket) => {
+    dispatch(setDragged(ticket.id));
   };
 
   const addTicket = () => {
@@ -44,8 +45,6 @@ const Column = ({ title, column }: Props) => {
     dispatch(setActive(ticket));
   };
   const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
-    const ticketId = e.dataTransfer.getData("ticketId");
-
     clearHighlights();
 
     const marks = getMarks();
@@ -131,7 +130,7 @@ const Column = ({ title, column }: Props) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper data-testid={"column"}>
       <HeaderWrapper>
         <ColoredHeader $column={column}>
           <h3>{title}</h3>
@@ -143,7 +142,13 @@ const Column = ({ title, column }: Props) => {
           </Button>
         </AddTicketWrapper>
       </HeaderWrapper>
-      <ColoredContent $column={column} onDrop={handleDragEnd} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
+      <ColoredContent
+        $column={column}
+        onDrop={handleDragEnd}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        data-testid={"dropzone"}
+      >
         {filteredTickets.map((c) => {
           if (activeTicket && activeTicket.id === c.id) {
             return <TicketForm key={c.id} ticket={activeTicket} />;

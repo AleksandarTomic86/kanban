@@ -5,12 +5,14 @@ import { ITicket } from "@/types";
 export interface TicketsState {
   value: ITicket[];
   active: ITicket | null;
+  dragged: string | null;
   search: string;
 }
 
 const initialState: TicketsState = {
   value: [],
   active: null,
+  dragged: null,
   search: "",
 };
 
@@ -20,12 +22,16 @@ export const ticketsSlice = createSlice({
   reducers: {
     setTickets: (state, action: PayloadAction<ITicket[]>) => {
       state.value = action.payload;
+      state.dragged = null;
     },
     setActive: (state, action: PayloadAction<ITicket | null>) => {
       state.active = action.payload;
     },
     setSearch: (state, action: PayloadAction<string>) => {
       state.search = action.payload;
+    },
+    setDragged: (state, action: PayloadAction<string | null>) => {
+      state.dragged = action.payload;
     },
     save: (state, action: PayloadAction<ITicket>) => {
       if (!state.value.find((t) => t.id === action.payload.id)) {
@@ -58,6 +64,6 @@ export const selectFilteredTickets = createSelector(
 );
 
 // Action creators are generated for each case reducer function
-export const { setTickets, setActive, setSearch, save } = ticketsSlice.actions;
+export const { setTickets, setActive, setSearch, setDragged, save } = ticketsSlice.actions;
 
 export default ticketsSlice.reducer;

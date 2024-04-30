@@ -30,6 +30,7 @@ const Ticket = ({ ticket, handleDragStart }: Props) => {
         draggable={activeTicket === null ? "true" : "false"}
         onDragStart={(e) => handleDragStart(e, ticket)}
         onDoubleClick={handleDoubleClick}
+        data-testid={"ticket"}
       >
         <Delete>
           <Button onClick={handleDelete} size={0.75}>
