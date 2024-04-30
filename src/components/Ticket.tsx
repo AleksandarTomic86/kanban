@@ -1,9 +1,10 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
 import { setTickets, setActive } from "@/redux/ticketsSlice.ts";
-import styles from "@/components/Kanban.module.css";
 import DropMark from "@/components/DropMark.tsx";
 import { ITicket } from "@/types";
+import Button from "@/components/UI/Button.tsx";
+import { ColoredTicket, Delete } from "@/components/styled/Ticket.tsx";
 
 interface Props {
   ticket: ITicket;
@@ -24,19 +25,19 @@ const Ticket = ({ ticket, handleDragStart }: Props) => {
   return (
     <>
       <DropMark beforeId={ticket.id} column={ticket.column} />
-      <div
+      <ColoredTicket
+        $column={ticket.column}
         draggable={activeTicket === null ? "true" : "false"}
         onDragStart={(e) => handleDragStart(e, ticket)}
         onDoubleClick={handleDoubleClick}
-        className={styles.ticket}
       >
-        <div className={styles.ticketDeleteWrapper}>
-          <button type={"button"} className={styles.ticketDeleteButton} onClick={handleDelete}>
-            x
-          </button>
-        </div>
+        <Delete>
+          <Button onClick={handleDelete} size={0.75}>
+            X
+          </Button>
+        </Delete>
         <p>{ticket.text}</p>
-      </div>
+      </ColoredTicket>
     </>
   );
 };

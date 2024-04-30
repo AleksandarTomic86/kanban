@@ -1,10 +1,14 @@
-import styles from "./Kanban.module.css";
 import Board from "@/components/Board.tsx";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
 import { setSearch } from "@/redux/ticketsSlice.ts";
 import React from "react";
+import Box from "@/components/UI/Box.tsx";
+import { Input, StyledKanban } from "@/components/styled/Kanban.tsx";
 
-const CustomKanban = () => {
+interface Props {
+  className?: string;
+}
+const Kanban = ({ className }: Props) => {
   const search = useAppSelector((state) => state.tickets.search);
   const dispatch = useAppDispatch();
 
@@ -12,15 +16,15 @@ const CustomKanban = () => {
     dispatch(setSearch(e.target.value));
   };
   return (
-    <div className={styles.canban}>
-      <div className={styles.canbanContent}>
-        <div className={styles.searchWrapper}>
-          <input type="text" value={search} onChange={handleChange} />
-        </div>
+    <StyledKanban className={className}>
+      <Box $direction={"column"} $justify={"center"} $items={"center"} $mx={"auto"} $width={"43rem"}>
+        <Box $justify={"flex-end"} $items={"center"} $my={"1rem"} $width={"100%"}>
+          <Input type="text" value={search} onChange={handleChange} placeholder={"search..."} />
+        </Box>
         <Board />
-      </div>
-    </div>
+      </Box>
+    </StyledKanban>
   );
 };
 
-export default CustomKanban;
+export default Kanban;

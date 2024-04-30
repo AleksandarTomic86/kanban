@@ -1,16 +1,24 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
 import { selectFilteredTickets, setActive, setTickets } from "@/redux/ticketsSlice.ts";
-import styles from "@/components/Kanban.module.css";
-import { IMark, ITicket } from "@/types";
+import { ColumnType, IMark, ITicket } from "@/types";
 import TicketForm from "@/components/TicketForm.tsx";
 import DropMark from "@/components/DropMark.tsx";
 import Ticket from "@/components/Ticket.tsx";
+import Button from "@/components/UI/Button.tsx";
+import {
+  AddTicketWrapper,
+  ColoredContent,
+  ColoredHeader,
+  HeaderWrapper,
+  Wrapper,
+} from "@/components/styled/Column.tsx";
 
 interface Props {
   title: string;
-  column: string;
+  column: ColumnType;
 }
+
 const Column = ({ title, column }: Props) => {
   const tickets = useAppSelector((state) => state.tickets.value);
   const activeTicket = useAppSelector((state) => state.tickets.active);
@@ -123,22 +131,19 @@ const Column = ({ title, column }: Props) => {
   };
 
   return (
-    <div className={styles.column}>
-      <div className={styles.columnHeaderWrapper}>
-        <div className={styles.columnHeader}>
+    <Wrapper>
+      <HeaderWrapper>
+        <ColoredHeader $column={column}>
           <h3>{title}</h3>
-          <p>{filteredTickets.length}</p>
-        </div>
-        <span className={styles.columnAddTicketWrapper} onClick={addTicket}>
-          +
-        </span>
-      </div>
-      <div
-        onDrop={handleDragEnd}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        className={styles.columnContent}
-      >
+          <p>({filteredTickets.length})</p>
+        </ColoredHeader>
+        <AddTicketWrapper>
+          <Button onClick={addTicket} size={1.5}>
+            +
+          </Button>
+        </AddTicketWrapper>
+      </HeaderWrapper>
+      <ColoredContent $column={column} onDrop={handleDragEnd} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
         {filteredTickets.map((c) => {
           if (activeTicket && activeTicket.id === c.id) {
             return <TicketForm key={c.id} ticket={activeTicket} />;
@@ -146,10 +151,9 @@ const Column = ({ title, column }: Props) => {
 
           return <Ticket key={c.id} ticket={c} handleDragStart={handleDragStart} />;
         })}
-        <DropMark beforeId={null} column={column} />
-        {isNewTicket && <TicketForm ticket={activeTicket!} />}
-      </div>
-    </div>
+        {isNewTicket ? <TicketForm ticket={activeTicket!} /> : <DropMark beforeId={null} column={column} />}
+      </ColoredContent>
+    </Wrapper>
   );
 };
 

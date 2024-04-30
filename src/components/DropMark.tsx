@@ -1,17 +1,11 @@
-import styles from "@/components/Kanban.module.css";
+import StyledDropMark from "@/components/styled/DropMark.tsx";
 
-interface DropMarkProps {
+interface Props {
   beforeId: string | null;
   column: string;
 }
-const DropMark = ({ beforeId, column }: DropMarkProps) => {
-  return (
-    <div
-      data-before={beforeId || "-1"}
-      data-column={column}
-      className={styles.dropMark}
-    />
-  );
+const DropMark = ({ beforeId, column }: Props) => {
+  return <StyledDropMark data-before={beforeId || "-1"} data-column={column} />;
 };
 
 export default DropMark;
